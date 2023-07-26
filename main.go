@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	gofakeit "github.com/brianvoe/gofakeit"
+	"github.com/caarlos0/env/v9"
+	"github.com/dustinkirkland/golang-petname"
+	go_uuid "github.com/satori/go.uuid"
+	"math/rand"
 	"strings"
 	"time"
-
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/caarlos0/env/v6"
 )
 
 type config struct {
@@ -22,23 +24,46 @@ type config struct {
 	PercentageDelete int     `env:"DELETE_PERCENT" envDefault:"0"`
 }
 
+func initRand() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
+
+func randFloat(min, max float32) float32 {
+	res := min + float32(rand.Int31n(int32(max))) + float32(rand.Int31n(99)+1)/100
+
+	return res
+}
+
+func randFloats(min, max float64, n int) []float64 {
+	res := make([]float64, n)
+	for i := range res {
+		res[i] = min + rand.Float64()*(max-min)
+	}
+	return res
+}
+
 func main() {
 	cfg := config{}
+
 	if err := env.Parse(&cfg); err != nil {
-		panic(err)
+		fmt.Printf("%+v\n", err)
 	}
+
+	fmt.Printf("%+v\n", cfg)
 	checkMinMax(&cfg.PathMinLength, &cfg.PathMaxLength)
 
 	ticker := time.NewTicker(time.Second / time.Duration(cfg.Rate))
 
 	gofakeit.Seed(time.Now().UnixNano())
 
-	var ip, httpMethod, path, httpVersion, referrer, userAgent string
-	var statusCode, bodyBytesSent int
+	var ip, httpMethod, path, referrer, userAgent string
+	var statusCode, bodyBytesSent, upstream_status int
 	var timeLocal time.Time
 
-	httpVersion = "HTTP/1.1"
+	//httpVersion = "HTTP/1.1"
 	referrer = "-"
+
+	initRand()
 
 	for range ticker.C {
 		timeLocal = time.Now()
@@ -49,8 +74,26 @@ func main() {
 		statusCode = weightedStatusCode(cfg.StatusOkPercent)
 		bodyBytesSent = realisticBytesSent(statusCode)
 		userAgent = gofakeit.UserAgent()
+		uuid := go_uuid.NewV4().String()
 
-		fmt.Printf("%s - - [%s] \"%s %s %s\" %v %v \"%s\" \"%s\"\n", ip, timeLocal.Format("02/Jan/2006:15:04:05 -0700"), httpMethod, path, httpVersion, statusCode, bodyBytesSent, referrer, userAgent)
+		httpHost := petname.Generate(3, ".")
+		serverName := petname.Generate(1, ".")
+		requestTime := randFloat(0.01, 301.98)
+		upstreamConnectTime := randFloat(0.01, 301.98)
+		upstreamHeaderTime := randFloat(0.01, 301.98)
+		upstreamResponseTime := randFloat(0.01, 301.98)
+		pid := rand.Intn(1000)
+		httpReferer := referrer
+		upstreamCacheStatus := "-"
+		upstreamAddr := "-"
+		requestUri := path
+		proxiedUri := path
+		serverProtocol := "HTTP/1.1"
+		requestLength := bodyBytesSent
+		httpXRequestedWith := "-"
+		scheme := "http"
+
+		fmt.Printf("%s %s - %s %s 80 11 22 33 44 55 66 77 %s %v %v %v %v %v %v %v %s %s %s %s %s %s %v %v %s %s %v %v %v\n", uuid, ip, httpHost, serverName, timeLocal.Format("02/Jan/2006:15:04:05 -0700"), statusCode, pid, requestTime, upstream_status, upstreamConnectTime, upstreamHeaderTime, upstreamResponseTime, upstreamCacheStatus, upstreamAddr, httpMethod, requestUri, proxiedUri, serverProtocol, requestLength, bodyBytesSent, httpReferer, userAgent, httpXRequestedWith, scheme, bodyBytesSent)
 	}
 }
 
@@ -68,7 +111,7 @@ func weightedStatusCode(percentageOk int) int {
 		return 200
 	}
 
-	return gofakeit.HTTPStatusCodeSimple()
+	return gofakeit.SimpleStatusCode()
 }
 
 func weightedHTTPMethod(percentageGet, percentagePost, percentagePut, percentagePatch, percentageDelete int) string {
@@ -109,12 +152,12 @@ func randomPath(min, max int) string {
 
 	for i := 0; i < length; i++ {
 		if i > 0 {
-			path.WriteString(gofakeit.RandomString([]string{"-", "-", "_", "%20", "/", "/", "/"}))
+			path.WriteString(gofakeit.RandString([]string{"-", "-", "_", "%20", "/", "/", "/"}))
 		}
 		path.WriteString(gofakeit.BuzzWord())
 	}
 
-	path.WriteString(gofakeit.RandomString([]string{".hmtl", ".php", ".htm", ".jpg", ".png", ".gif", ".svg", ".css", ".js"}))
+	path.WriteString(gofakeit.RandString([]string{".hmtl", ".php", ".htm", ".jpg", ".png", ".gif", ".svg", ".css", ".js"}))
 
 	result := path.String()
 	return strings.Replace(result, " ", "%20", -1)
