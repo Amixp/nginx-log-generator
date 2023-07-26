@@ -1,4 +1,4 @@
-# Nginx Log Generator
+# Nginx Log Generator v2
 
 A tiny Go utility to generate a large amount realistic-looking Nginx logs quickly. It was written to aid in testing logging pipelines and other such tools, and demoing them in Kubernetes.
 
@@ -16,8 +16,8 @@ $ RATE=10 ./nginx-log-generator
 The reason this is an environment variable is so it's easier to run via Docker as well:
 
 ```sh
-$ docker pull kscarlett/nginx-log-generator
-$ docker run -e "RATE=10" kscarlett/nginx-log-generator
+$ docker pull amixp/nginx-log-generator-v2
+$ docker run -e "RATE=10" amixp/nginx-log-generator-v2
 ```
 
 ### Configuration
