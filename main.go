@@ -93,7 +93,7 @@ func main() {
 		httpXRequestedWith := "-"
 		scheme := "http"
 
-		fmt.Printf("%s %s - %s %s 80 11 22 33 44 55 66 77 %s %v %v %v %v %v %v %v %s %s %s %s %s %s %v %v %s %s %v %v %v\n", uuid, ip, httpHost, serverName, timeLocal.Format("02/Jan/2006:15:04:05 -0700"), statusCode, pid, requestTime, upstream_status, upstreamConnectTime, upstreamHeaderTime, upstreamResponseTime, upstreamCacheStatus, upstreamAddr, httpMethod, requestUri, proxiedUri, serverProtocol, requestLength, bodyBytesSent, httpReferer, userAgent, httpXRequestedWith, scheme, bodyBytesSent)
+		fmt.Printf("\"%s\" \"%s\" \"-\" \"%s\" \"%s\" \"80\" \"11\" \"22\" \"33\" \"44\" \"55\" \"66\" \"77\" \"%s\" \"%v\" \"%v\" \"%v\" \"%v\" \"%v\" \"%v\" \"%v\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%v\" \"%v\" \"%s\" \"%s\" \"%v\" \"%v\" \"%v\"\n", uuid, ip, httpHost, serverName, timeLocal.Format("02/Jan/2006:15:04:05 -0700"), statusCode, pid, requestTime, upstream_status, upstreamConnectTime, upstreamHeaderTime, upstreamResponseTime, upstreamCacheStatus, upstreamAddr, httpMethod, requestUri, proxiedUri, serverProtocol, requestLength, bodyBytesSent, httpReferer, userAgent, httpXRequestedWith, scheme, bodyBytesSent)
 	}
 }
 
