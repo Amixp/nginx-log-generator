@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="amixp/nginx-log-generator-v2:0.1" type="docker" uuid="9a5c4f9d-fd74-4030-bbe1-05235b3b92dd">
+        <config>
+          <option name="targetPlatform">
+            <TargetPlatform />
+          </option>
+          <option name="buildImageConfig">
+            <BuildImageConfig>
+              <option name="builtImageTag" value="amixp/nginx-log-generator-v2:0.1" />
+              <option name="dockerFile" value="Dockerfile" />
+            </BuildImageConfig>
+          </option>
+          <option name="dockerServerName" value="Docker rootless" />
+        </config>
+        <ContributedStateBase type="GoLanguageRuntime">
+          <config>
+            <option name="compiledExecutablesVolume">
+              <VolumeState>
+                <option name="targetSpecificBits">
+                  <map>
+                    <entry key="mountAsVolume" value="false" />
+                  </map>
+                </option>
+              </VolumeState>
+            </option>
+            <option name="goPath" value="$USER_HOME$/go/sdk" />
+            <option name="goRoot" value="/usr/bin/go" />
+            <option name="goVersion" value="Error: crun: executable file `Error:` not found in $PATH: No such file or directory: OCI runtime attempted to invoke a command that was not found" />
+            <option name="projectSourcesVolume">
+              <VolumeState>
+                <option name="targetSpecificBits">
+                  <map>
+                    <entry key="mountAsVolume" value="false" />
+                  </map>
+                </option>
+              </VolumeState>
+            </option>
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>
